@@ -35,7 +35,11 @@ const notice = ( state = false, action ) => {
 	}
 };
 
-const dismissed = ( state = window.Initial_State.dismissedNotices, action ) => {
+const initialDismissedNotices = window.Initial_State && window.Initial_State.dismissedNotices
+	? window.Initial_State.dismissedNotices
+	: {};
+
+const dismissed = ( state = initialDismissedNotices, action ) => {
 	switch ( action.type ) {
 		case JETPACK_ACTION_NOTICES_DISMISS:
 			return assign( {}, state, { [ action.notice ]: true } );

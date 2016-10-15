@@ -3,6 +3,7 @@
  */
 import { combineReducers } from 'redux';
 import assign from 'lodash/assign';
+import get from 'lodash/get';
 
 /**
  * Internal dependencies
@@ -52,7 +53,7 @@ export const reducer = combineReducers( {
  * @return {bool}         True if site is connected, False if it is not.
  */
 export function getJumpStartStatus( state ) {
-	return state.jetpack.jumpstart.status.showJumpStart;
+	return get( state.jetpack, [ 'jumpstart', 'status', 'showJumpStart' ] );
 }
 
 /**
@@ -62,5 +63,5 @@ export function getJumpStartStatus( state ) {
  * @return {bool} true if Jump Start is being activated
  */
 export function isJumpstarting( state ) {
-	return state.jetpack.jumpstart.status.isJumpstarting;
+	return get( state.jetpack, [ 'jumpstart', 'status', 'isJumpstarting' ] );
 }

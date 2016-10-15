@@ -9,6 +9,49 @@ import get from 'lodash/get';
  */
 import { JETPACK_SET_INITIAL_STATE } from 'state/action-types';
 
+if ( window && ( 'undefined' === typeof window.Initial_State ) ) {
+	window.Initial_State = {
+		jetpack: {
+			initialState: 'initialState',
+			dashboard: {
+				requests: {},
+				activeStatsTab: {},
+				protectCount: {},
+				lastDownTime: {},
+				vaultPressData: {},
+				statsData: {},
+				akismetData: {},
+				pluginUpdates: {}
+			},
+			modules: {},
+			connection: {
+				isActive : true,
+				isStaging: false,
+				devMode  : {
+					isActive: false,
+					constant: false,
+					url     : false,
+					filter  : false
+				},
+				isPublic: true
+			},
+			jumpstart: {
+				state: false
+			},
+			settings: {},
+			userData: {
+				currentUser: 0
+			},
+			siteData: {},
+			jetpackNotices: {},
+			pluginsData: {},
+			search: {}
+		},
+		routing: { routerReducer: {} },
+		globalNotices: { globalNotices: {} }
+	};
+}
+
 export const initialState = ( state = window.Initial_State, action ) => {
 	switch ( action.type ) {
 		case JETPACK_SET_INITIAL_STATE:
@@ -37,7 +80,7 @@ export function getHappinessGravatarIds( state ) {
  * @return {bool} true if dev version
  */
 export function isDevVersion( state ) {
-	return !! state.jetpack.initialState.isDevVersion;
+	return !! get( state.jetpack, [ 'initialState', 'isDevVersion' ] );
 }
 
 /**
@@ -48,7 +91,7 @@ export function isDevVersion( state ) {
  * @return {string}         Version number
  */
 export function getCurrentVersion( state ) {
-	return state.jetpack.initialState.currentVersion;
+	return get( state.jetpack, [ 'initialState', 'currentVersion' ] );
 }
 
 export function getSiteRoles( state ) {
@@ -64,27 +107,27 @@ export function getAdminEmailAddress( state ) {
 }
 
 export function getSiteRawUrl( state ) {
-	return get( state.jetpack.initialState, 'rawUrl', {} );
+	return get( state.jetpack, [ 'initialState', 'rawUrl' ], {} );
 }
 
 export function getSiteAdminUrl( state ) {
-	return get( state.jetpack.initialState, 'adminUrl', {} );
+	return get( state.jetpack, [ 'initialState', 'adminUrl' ], {} );
 }
 
 export function isSitePublic( state ) {
-	return get( state.jetpack.initialState, [ 'connectionStatus', 'isPublic' ] );
+	return get( state.jetpack, [ 'initialState', 'connectionStatus', 'isPublic' ] );
 }
 
 export function userIsSubscriber( state ) {
-	return ! get( state.jetpack.initialState.userData.currentUser.permissions, 'edit_posts', false );
+	return ! get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'permissions', 'edit_posts' ], false );
 }
 
 export function userCanManageModules( state ) {
-	return get( state.jetpack.initialState.userData.currentUser.permissions, 'manage_modules', false );
+	return get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'permissions', 'manage_modules' ], false );
 }
 
 export function userCanManageOptions( state ) {
-	return get( state.jetpack.initialState.userData.currentUser.permissions, 'manage_options', false );
+	return get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'permissions', 'manage_options' ], false );
 }
 
 /**
@@ -95,7 +138,7 @@ export function userCanManageOptions( state ) {
  * @return {bool} Whether user can edit posts.
  */
 export function userCanEditPosts( state ) {
-	return get( state.jetpack.initialState.userData.currentUser.permissions, 'edit_posts', false );
+	return get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'permissions', 'edit_posts' ], false );
 }
 
 /**
@@ -106,15 +149,15 @@ export function userCanEditPosts( state ) {
  * @return {bool} Whether user can manage plugins.
  */
 export function userCanManagePlugins( state ) {
-	return get( state.jetpack.initialState.userData.currentUser.permissions, 'manage_plugins', false );
+	return get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'permissions', 'manage_plugins' ], false );
 }
 
 export function userCanDisconnectSite( state ) {
-	return get( state.jetpack.initialState.userData.currentUser.permissions, 'disconnect', false );
+	return get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'permissions', 'disconnect' ], false );
 }
 
 export function userIsMaster( state ) {
-	return get( state.jetpack.initialState.userData.currentUser, 'isMaster', false );
+	return get( state.jetpack, [ 'initialState', 'userData', 'currentUser', 'isMaster' ], false );
 }
 
 export function getUserWpComLogin( state ) {
@@ -138,17 +181,17 @@ export function userCanViewStats( state ) {
 }
 
 export function getApiNonce( state ) {
-	return get( state.jetpack.initialState, 'WP_API_nonce' );
+	return get( state.jetpack, [ 'initialState', 'WP_API_nonce' ] );
 }
 
 export function getApiRootUrl( state ) {
-	return get( state.jetpack.initialState, 'WP_API_root' );
+	return get( state.jetpack, [ 'initialState', 'WP_API_root' ] );
 }
 
 export function getTracksUserData( state ) {
-	return get( state.jetpack.initialState, 'tracksUserData' );
+	return get( state.jetpack, [ 'initialState', 'tracksUserData' ] );
 }
 
 export function getCurrentIp( state ) {
-	return get( state.jetpack.initialState, 'currentIp' );
+	return get( state.jetpack, [ 'initialState', 'currentIp' ] );
 }

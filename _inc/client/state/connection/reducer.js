@@ -26,7 +26,21 @@ import {
 } from 'state/action-types';
 import { getModulesThatRequireConnection } from 'state/modules';
 
-export const status = ( state = { siteConnected: window.Initial_State.connectionStatus }, action ) => {
+const initialConnectionStatus = window.Initial_State && window.Initial_State.connectionStatus
+	? window.Initial_State.connectionStatus
+	: {
+		isActive : false,
+		isStaging: false,
+		devMode  : {
+			isActive: false,
+			constant: false,
+			url     : false,
+			filter  : false
+		},
+		isPublic: true
+	};
+
+export const status = ( state = { siteConnected: initialConnectionStatus }, action ) => {
 	switch ( action.type ) {
 		case JETPACK_CONNECTION_STATUS_FETCH:
 			return assign( {}, state, { siteConnected: action.siteConnected } );
@@ -48,7 +62,13 @@ export const connectUrl = ( state = '', action ) => {
 	}
 };
 
-export const user = ( state = window.Initial_State.userData, action ) => {
+const initialUserData = window.Initial_State && window.Initial_State.userData
+	? window.Initial_State.userData
+	: {
+		currentUser: 0
+	};
+
+export const user = ( state = initialUserData, action ) => {
 	switch ( action.type ) {
 		case USER_CONNECTION_DATA_FETCH_SUCCESS:
 			return assign( {}, state, action.userConnectionData );
@@ -115,13 +135,13 @@ export const reducer = combineReducers( {
  * @return {bool|string} True if site is connected, False if it is not, 'dev' if site is in development mode.
  */
 export function getSiteConnectionStatus( state ) {
-	if ( 'object' !== typeof state.jetpack.connection.status.siteConnected ) {
+	if ( 'object' !== typeof get( state.jetpack, [ 'connection', 'status', 'siteConnected' ] ) ) {
 		return false;
 	}
-	if ( state.jetpack.connection.status.siteConnected.devMode.isActive ) {
+	if ( !! get( state.jetpack, [ 'connection', 'status', 'siteConnected', 'devMode', 'isActive' ] ) ) {
 		return 'dev';
 	}
-	return state.jetpack.connection.status.siteConnected.isActive;
+	return get( state.jetpack, [ 'connection', 'status', 'siteConnected', 'isActive' ] );
 }
 
 /**
@@ -131,8 +151,8 @@ export function getSiteConnectionStatus( state ) {
  * @return {bool|object} False if site is not in Dev Mode. If it is, returns an object with information about the Dev Mode.
  */
 export function getSiteDevMode( state ) {
-	if ( get( state.jetpack.connection.status, [ 'siteConnected', 'devMode', 'isActive'] ) ) {
-		return get( state.jetpack.connection.status, [ 'siteConnected', 'devMode'] );
+	if ( get( state.jetpack, [ 'connection', 'status', 'siteConnected', 'devMode', 'isActive'] ) ) {
+		return get( state.jetpack, [ 'connection', 'status', 'siteConnected', 'devMode'] );
 	}
 	return false;
 }
@@ -144,7 +164,7 @@ export function getSiteDevMode( state ) {
  * @return {String}       URL for connecting to WordPress.com
  */
 export function getConnectUrl( state ) {
-	return state.jetpack.connection.connectUrl;
+	return get( state.jetpack, [ 'connection', 'connectUrl' ] );
 }
 
 /**
@@ -214,7 +234,7 @@ export function isDevMode( state ) {
  * @return {boolean} True if site is in staging. False otherwise.
  */
 export function isStaging( state ) {
-	return get( state.jetpack.connection.status, [ 'siteConnected', 'isStaging' ], false );
+	return get( state.jetpack, [ 'connection', 'status', 'siteConnected', 'isStaging' ], false );
 }
 
 /**

@@ -246,5 +246,5 @@ export function isModuleActivated( state, name ) {
 }
 
 export function areThereUnsavedModuleOptions( state ) {
-	return get( state.jetpack.modules, 'unsavedOptionsFlag' );
+	return get( state.jetpack, [ 'modules', 'unsavedOptionsFlag' ] );
 }
